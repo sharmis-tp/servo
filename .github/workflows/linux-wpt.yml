@@ -103,6 +103,10 @@ jobs:
         if: ${{ inputs.wpt-sync-from-upstream }}
         run: |
           ./mach update-wpt --sync --patch
+      - name: Check intermittent token
+        run: gh api graphql -f query='{ rateLimit { limit remaining used } }'
+        env:
+          GH_TOKEN: ${{ secrets.INTERMITTENT_ISSUES_TOKEN || github.token }}
       - name: Run tests
         run: |
           mkdir -p wpt-filtered-logs/linux
